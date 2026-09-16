@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.jobtracker.jobtracker_backend.dto.AuthResponse;
 import com.jobtracker.jobtracker_backend.dto.LoginRequest;
 import com.jobtracker.jobtracker_backend.dto.RegisterRequest;
+import com.jobtracker.jobtracker_backend.exception.EmailAlreadyExistsException;
+import com.jobtracker.jobtracker_backend.exception.InvalidCredentialsException;
 import com.jobtracker.jobtracker_backend.model.User;
 import com.jobtracker.jobtracker_backend.repository.UserRepository;
 
@@ -24,7 +26,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new EmailAlreadyExistsException("Email already in use");
         }
 
         User user = new User();
@@ -41,10 +43,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
         String token = jwtService.generateToken(user.getId(), user.getEmail());
