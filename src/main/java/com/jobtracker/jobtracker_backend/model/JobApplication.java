@@ -28,6 +28,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * A single job application owned by a {@link User}. Root of the per-application
+ * data (contacts, status-change events); deleting one cascades to both.
+ */
 @Entity
 @Data
 @AllArgsConstructor

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jobtracker.jobtracker_backend.dto.DashboardStatsResponse;
 import com.jobtracker.jobtracker_backend.service.DashboardService;
 
-@RestController 
+/** Single read-only endpoint exposing aggregate stats for the authenticated user. */
+@RestController
 @RequestMapping ("/api/dashboard")
 public class DashboardController {
     private final DashboardService dashboardService;

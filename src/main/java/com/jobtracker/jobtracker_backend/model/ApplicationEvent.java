@@ -20,6 +20,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * A single status-change entry in a job application's history (e.g. moved to
+ * INTERVIEW on a given date). Many events belong to one {@link JobApplication}.
+ */
 @Entity
 @Data
 @AllArgsConstructor

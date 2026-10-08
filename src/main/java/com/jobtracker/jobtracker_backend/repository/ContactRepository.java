@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.jobtracker.jobtracker_backend.model.Contact;
 
+/** Data access for {@link Contact} entities. */
 public interface ContactRepository extends JpaRepository<Contact, UUID>{
     List<Contact> findByJobApplicationId(UUID jobApplicationId);
 }

@@ -18,7 +18,13 @@ import com.jobtracker.jobtracker_backend.repository.JobApplicationRepository;
 
 
 
-@Service 
+/**
+ * CRUD operations for application events (status-change history) nested
+ * under a job application. Same two-level ownership check as ContactService:
+ * job application must belong to the caller, event must belong to that job
+ * application, both failures return an identical 404.
+ */
+@Service
 @Transactional (readOnly = true)
 public class EventService {
     

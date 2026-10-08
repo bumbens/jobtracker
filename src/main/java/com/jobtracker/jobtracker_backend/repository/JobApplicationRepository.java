@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.jobtracker.jobtracker_backend.model.ApplicationStatus;
 import com.jobtracker.jobtracker_backend.model.JobApplication;
 
+/** Data access for {@link JobApplication} entities, including per-status counts for the dashboard. */
 public interface JobApplicationRepository extends JpaRepository<JobApplication, UUID> {
     List<JobApplication> findByUserId(UUID userId);
     List<JobApplication> findByUserIdAndStatus(UUID userId, ApplicationStatus status);

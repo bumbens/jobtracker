@@ -18,7 +18,8 @@ import com.jobtracker.jobtracker_backend.model.JobApplication;
 import com.jobtracker.jobtracker_backend.repository.ApplicationEventRepository;
 import com.jobtracker.jobtracker_backend.repository.JobApplicationRepository;
 
-@Service 
+/** Computes {@link DashboardStatsResponse} by aggregating a user's job applications and events directly — no per-resource ownership check needed since everything is already scoped by userId. */
+@Service
 public class DashboardService {
     
     private final JobApplicationRepository jobApplicationRepository;

@@ -15,7 +15,12 @@ import com.jobtracker.jobtracker_backend.model.JobApplication;
 import com.jobtracker.jobtracker_backend.repository.JobApplicationRepository;
 import com.jobtracker.jobtracker_backend.repository.UserRepository;
 
-@Service 
+/**
+ * CRUD operations for job applications. Every operation is scoped to the
+ * authenticated user via {@link #findOwned}; a non-owner gets the same 404
+ * as a non-existent application, never a 403 that would confirm ownership.
+ */
+@Service
 @Transactional (readOnly = true)
 public class JobApplicationService {
 

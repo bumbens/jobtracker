@@ -15,6 +15,13 @@ import com.jobtracker.jobtracker_backend.model.JobApplication;
 import com.jobtracker.jobtracker_backend.repository.ContactRepository;
 import com.jobtracker.jobtracker_backend.repository.JobApplicationRepository;
 
+/**
+ * CRUD operations for contacts nested under a job application. Ownership is
+ * checked two levels deep: the job application must belong to the caller,
+ * and the contact must belong to that job application. Both failure cases
+ * return an identical 404 so a non-owner can't tell "doesn't exist" apart
+ * from "exists, but isn't yours".
+ */
 @Service
 @Transactional (readOnly = true)
 public class ContactService {

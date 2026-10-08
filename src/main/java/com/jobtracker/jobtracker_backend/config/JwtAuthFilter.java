@@ -17,6 +17,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Runs once per request: if a valid {@code Bearer} token is present, sets the
+ * security context's principal to the raw user {@link UUID} (no DB lookup).
+ * Never rejects a request itself — missing/invalid tokens just pass through
+ * unauthenticated, and {@link com.jobtracker.jobtracker_backend.config.SecurityConfig}'s
+ * {@code authorizeHttpRequests} rules decide what happens next.
+ */
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 

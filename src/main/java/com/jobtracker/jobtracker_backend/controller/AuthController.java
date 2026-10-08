@@ -14,6 +14,7 @@ import com.jobtracker.jobtracker_backend.service.AuthService;
 
 import jakarta.validation.Valid;
 
+/** Public auth endpoints — register and login. Not behind the JWT filter's auth check. */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

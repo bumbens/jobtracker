@@ -11,6 +11,7 @@ import com.jobtracker.jobtracker_backend.exception.InvalidCredentialsException;
 import com.jobtracker.jobtracker_backend.model.User;
 import com.jobtracker.jobtracker_backend.repository.UserRepository;
 
+/** Registration and login: password hashing/verification and JWT issuance. */
 @Service
 public class AuthService {
 

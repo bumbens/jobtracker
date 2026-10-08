@@ -11,7 +11,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice 
+/**
+ * Central mapping from exceptions to RFC 7807 {@link ProblemDetail} responses,
+ * so every error (404/409/401/403/400) has the same JSON shape regardless of
+ * which layer threw it.
+ */
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)

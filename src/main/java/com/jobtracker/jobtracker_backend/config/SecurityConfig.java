@@ -13,8 +13,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-@Configuration 
-@EnableWebSecurity 
+/**
+ * Wires up stateless, JWT-based security: CORS for the Vite dev server, CSRF
+ * disabled (no cookies/sessions involved), no server-side session, and
+ * {@link JwtAuthFilter} running before Spring's own auth filter.
+ */
+@Configuration
+@EnableWebSecurity
 public class SecurityConfig {
     
     private final JwtAuthFilter jwtAuthFilter;

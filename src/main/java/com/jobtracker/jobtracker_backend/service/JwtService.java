@@ -12,7 +12,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
-@Service 
+/** Issues and validates JWTs. The token's only payload is the user id (subject) and email. */
+@Service
 public class JwtService {
     
     private final SecretKey signingKey;

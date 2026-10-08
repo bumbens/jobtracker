@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.jobtracker.jobtracker_backend.model.ApplicationStatus;
 
+/** API-facing view of a {@link com.jobtracker.jobtracker_backend.model.JobApplication}; entities are never serialized directly. */
 public record JobApplicationResponse(
     UUID id,
     String company,

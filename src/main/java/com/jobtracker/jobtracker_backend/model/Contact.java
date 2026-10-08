@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/** A recruiter/contact person associated with one {@link JobApplication}. */
 @Entity
 @Data
 @AllArgsConstructor

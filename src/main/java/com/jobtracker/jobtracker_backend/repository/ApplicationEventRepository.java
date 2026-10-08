@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.jobtracker.jobtracker_backend.model.ApplicationEvent;
 
+/** Data access for {@link ApplicationEvent} entities. */
 public interface ApplicationEventRepository extends JpaRepository<ApplicationEvent, UUID>{
     List<ApplicationEvent> findByJobApplicationIdOrderByDateDesc(UUID jobApplicationId);    
 }

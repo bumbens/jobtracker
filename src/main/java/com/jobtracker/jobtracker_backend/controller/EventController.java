@@ -22,6 +22,7 @@ import com.jobtracker.jobtracker_backend.service.EventService;
 
 import jakarta.validation.Valid;
 
+/** REST endpoints for status-change events nested under a job application. */
 @RestController
 @RequestMapping("/api/applications/{applicationId}/events")
 public class EventController {

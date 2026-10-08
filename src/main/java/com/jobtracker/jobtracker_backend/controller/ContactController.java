@@ -22,6 +22,7 @@ import com.jobtracker.jobtracker_backend.service.ContactService;
 
 import jakarta.validation.Valid;
 
+/** REST endpoints for contacts nested under a job application. */
 @RestController
 @RequestMapping("/api/applications/{applicationId}/contacts")
 public class ContactController {

@@ -26,6 +26,7 @@ import com.jobtracker.jobtracker_backend.service.JobApplicationService;
 
 import jakarta.validation.Valid;
 
+/** REST endpoints for job applications — the top-level, user-owned resource. */
 @RestController
 @RequestMapping("/api/applications")
 public class JobApplicationController {

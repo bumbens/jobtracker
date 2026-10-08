@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** A registered account. Owns job applications; password is stored only as a BCrypt hash. */
 @Entity
 @Data
 @AllArgsConstructor
