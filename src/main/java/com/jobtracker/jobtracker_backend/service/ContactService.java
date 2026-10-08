@@ -3,7 +3,6 @@ package com.jobtracker.jobtracker_backend.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,7 @@ public class ContactService {
         JobApplication jobApplication = jobApplicationRepository.findById(jobApplicationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Job application not found"));
         if (!jobApplication.getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("Job application does not belong to user");
+            throw new ResourceNotFoundException("Job application not found");
         }
 
         return jobApplication;
@@ -45,7 +44,7 @@ public class ContactService {
                 .orElseThrow(() -> new ResourceNotFoundException("Contact not found"));
 
         if(!contact.getJobApplication().getId().equals(jobApplicationId)) {
-            throw new ResourceNotFoundException("Contact does not belong to job application");
+            throw new ResourceNotFoundException("Contact not found");
         }
 
         return contact;
