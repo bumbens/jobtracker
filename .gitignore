@@ -1,0 +1,5 @@
+# Local-only Claude Code session settings (not meant to be shared)
+.claude/settings.local.json
+
+# Temporary backup created during the backend->monorepo migration (contains secrets)
+backend.env.backup
