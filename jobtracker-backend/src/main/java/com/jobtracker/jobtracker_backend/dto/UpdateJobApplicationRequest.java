@@ -1,0 +1,17 @@
+package com.jobtracker.jobtracker_backend.dto;
+
+import java.time.LocalDate;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+/** Payload for {@code PUT /api/applications/{id}}. Status is not editable here — see {@link UpdateStatusRequest}. */
+public record UpdateJobApplicationRequest(
+    @NotBlank String company,
+    @NotBlank String position,
+    String jobUrl,
+    String source,
+    @NotNull LocalDate applicationDate,
+    String salaryRange,
+    String notes
+) {}
