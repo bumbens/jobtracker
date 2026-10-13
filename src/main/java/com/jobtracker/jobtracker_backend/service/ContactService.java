@@ -23,7 +23,7 @@ import com.jobtracker.jobtracker_backend.repository.JobApplicationRepository;
  * from "exists, but isn't yours".
  */
 @Service
-@Transactional (readOnly = true)
+@Transactional(readOnly = true)
 public class ContactService {
 
     private final ContactRepository contactRepository;
@@ -32,39 +32,6 @@ public class ContactService {
     public ContactService(ContactRepository contactRepository, JobApplicationRepository jobApplicationRepository) {
         this.contactRepository = contactRepository;
         this.jobApplicationRepository = jobApplicationRepository;
-    }
-
-    private JobApplication findOwnedJobApplication(UUID userId, UUID jobApplicationId) {
-        JobApplication jobApplication = jobApplicationRepository.findById(jobApplicationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Job application not found"));
-        if (!jobApplication.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Job application not found");
-        }
-
-        return jobApplication;
-    }
-
-    private Contact findOwnedContact(UUID userId, UUID jobApplicationId, UUID contactId) {
-        findOwnedJobApplication(userId, jobApplicationId);
-
-        Contact contact = contactRepository.findById(contactId)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact not found"));
-
-        if(!contact.getJobApplication().getId().equals(jobApplicationId)) {
-            throw new ResourceNotFoundException("Contact not found");
-        }
-
-        return contact;
-    }
-
-    private ContactResponse toResponse(Contact contact) {
-        return new ContactResponse(
-            contact.getId(),
-            contact.getName(),
-            contact.getRole(),
-            contact.getEmail(),
-            contact.getLinkedInUrl()
-        );
     }
 
     public List<ContactResponse> getAll(UUID userId, UUID jobApplicationId) {
@@ -80,8 +47,8 @@ public class ContactService {
         return toResponse(contact);
     }
 
-    @Transactional 
-    public ContactResponse create(UUID userId, UUID jobApplicationId, CreateContactRequest request){
+    @Transactional
+    public ContactResponse create(UUID userId, UUID jobApplicationId, CreateContactRequest request) {
         JobApplication jobApplication = findOwnedJobApplication(userId, jobApplicationId);
 
         Contact contact = new Contact();
@@ -112,6 +79,38 @@ public class ContactService {
     public void delete(UUID userId, UUID jobApplicationId, UUID contactId) {
         Contact contact = findOwnedContact(userId, jobApplicationId, contactId);
         contactRepository.delete(contact);
+    }
+
+    private JobApplication findOwnedJobApplication(UUID userId, UUID jobApplicationId) {
+        JobApplication jobApplication = jobApplicationRepository.findById(jobApplicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Job application not found"));
+        if (!jobApplication.getUser().getId().equals(userId)) {
+            throw new ResourceNotFoundException("Job application not found");
+        }
+
+        return jobApplication;
+    }
+
+    private Contact findOwnedContact(UUID userId, UUID jobApplicationId, UUID contactId) {
+        findOwnedJobApplication(userId, jobApplicationId);
+
+        Contact contact = contactRepository.findById(contactId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contact not found"));
+
+        if (!contact.getJobApplication().getId().equals(jobApplicationId)) {
+            throw new ResourceNotFoundException("Contact not found");
+        }
+
+        return contact;
+    }
+
+    private ContactResponse toResponse(Contact contact) {
+        return new ContactResponse(
+                contact.getId(),
+                contact.getName(),
+                contact.getRole(),
+                contact.getEmail(),
+                contact.getLinkedInUrl());
     }
 
 }

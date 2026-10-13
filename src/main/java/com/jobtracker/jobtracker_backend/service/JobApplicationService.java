@@ -21,7 +21,7 @@ import com.jobtracker.jobtracker_backend.repository.UserRepository;
  * as a non-existent application, never a 403 that would confirm ownership.
  */
 @Service
-@Transactional (readOnly = true)
+@Transactional(readOnly = true)
 public class JobApplicationService {
 
     private final JobApplicationRepository jobApplicationRepository;
@@ -32,33 +32,8 @@ public class JobApplicationService {
         this.userRepository = userRepository;
     }
 
-    private JobApplicationResponse toResponse(JobApplication jobApplication) {
-        return new JobApplicationResponse(
-            jobApplication.getId(),
-            jobApplication.getCompany(),
-            jobApplication.getPosition(),
-            jobApplication.getJobUrl(),
-            jobApplication.getSource(),
-            jobApplication.getStatus(),
-            jobApplication.getAppliedDate(),
-            jobApplication.getSalaryRange(),
-            jobApplication.getNotes(),
-            jobApplication.getCreatedAt(),
-            jobApplication.getUpdatedAt()
-        );
-    }
-
-    private JobApplication findOwned(UUID userId, UUID applicationId) {
-        JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Job application not found"));
-        if (!jobApplication.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Job application not found");
-        }
-        return jobApplication;
-    }
-    
-    @Transactional 
-    public JobApplicationResponse create (UUID userId, CreateJobApplicationRequest request) {
+    @Transactional
+    public JobApplicationResponse create(UUID userId, CreateJobApplicationRequest request) {
         JobApplication jobApplication = new JobApplication();
         jobApplication.setUser(userRepository.getReferenceById(userId));
         jobApplication.setCompany(request.company());
@@ -74,22 +49,21 @@ public class JobApplicationService {
         return toResponse(jobApplication);
     }
 
-
     public JobApplicationResponse getById(UUID userId, UUID applicationId) {
         return toResponse(findOwned(userId, applicationId));
     }
-    
+
     public List<JobApplicationResponse> getAllApplications(UUID userId, ApplicationStatus status) {
         List<JobApplication> applications = (status != null)
-            ? jobApplicationRepository.findByUserIdAndStatus(userId, status)
-            : jobApplicationRepository.findByUserId(userId);
+                ? jobApplicationRepository.findByUserIdAndStatus(userId, status)
+                : jobApplicationRepository.findByUserId(userId);
 
         return applications.stream()
-            .map(this::toResponse)
-            .toList();
+                .map(this::toResponse)
+                .toList();
     }
 
-    @Transactional 
+    @Transactional
     public JobApplicationResponse update(UUID userId, UUID applicationId, UpdateJobApplicationRequest request) {
         JobApplication jobApplication = findOwned(userId, applicationId);
 
@@ -105,7 +79,7 @@ public class JobApplicationService {
         return toResponse(jobApplication);
     }
 
-    @Transactional 
+    @Transactional
     public JobApplicationResponse updateStatus(UUID userId, UUID applicationId, ApplicationStatus status) {
         JobApplication jobApplication = findOwned(userId, applicationId);
         jobApplication.setStatus(status);
@@ -114,10 +88,34 @@ public class JobApplicationService {
         return toResponse(jobApplication);
     }
 
-    @Transactional 
+    @Transactional
     public void delete(UUID userId, UUID applicationId) {
         JobApplication jobApplication = findOwned(userId, applicationId);
         jobApplicationRepository.delete(jobApplication);
     }
-    
+
+    private JobApplicationResponse toResponse(JobApplication jobApplication) {
+        return new JobApplicationResponse(
+                jobApplication.getId(),
+                jobApplication.getCompany(),
+                jobApplication.getPosition(),
+                jobApplication.getJobUrl(),
+                jobApplication.getSource(),
+                jobApplication.getStatus(),
+                jobApplication.getAppliedDate(),
+                jobApplication.getSalaryRange(),
+                jobApplication.getNotes(),
+                jobApplication.getCreatedAt(),
+                jobApplication.getUpdatedAt());
+    }
+
+    private JobApplication findOwned(UUID userId, UUID applicationId) {
+        JobApplication jobApplication = jobApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Job application not found"));
+        if (!jobApplication.getUser().getId().equals(userId)) {
+            throw new ResourceNotFoundException("Job application not found");
+        }
+        return jobApplication;
+    }
+
 }
