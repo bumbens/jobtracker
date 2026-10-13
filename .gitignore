@@ -3,3 +3,8 @@
 
 # Temporary backup created during the backend->monorepo migration (contains secrets)
 backend.env.backup
+
+# Safety net: never commit an .env file anywhere in this repo, regardless of
+# whether a project's own .gitignore already covers it.
+**/.env
+**/.env.*
