@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import apiClient from '../api/client';
+import StatusBarChart from '../components/StatusBarChart';
 
 
 // Turns the applications count into a readable sentence (none / singular / plural).
@@ -37,7 +38,13 @@ function Dashboard() {
             </div>
             <div className="mt-6 text-center">
                 <h2 className="text-xl font-semibold mb-2">Stats</h2>
-                {stats ? getApplicationsMessage(stats.totalApplications) : 'Fetching data...'}
+                {stats ? 
+                    <>
+                        <p className="mb-4">{getApplicationsMessage(stats.totalApplications)}</p>
+                        <StatusBarChart countByStatus={stats.countsByStatus} />
+                    </>
+                : 'Fetching data...'}
+
             </div>
             <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-2">Recent Applications</h2>

@@ -81,4 +81,6 @@ exception/   Custom exceptions + global exception handler (RFC 7807 ProblemDetai
 ## Status
 
 Done: auth, full CRUD for applications/contacts/events, consistent error responses, dashboard stats.
-In progress: unit and integration tests + frontend (React).
+In progress: unit and integration tests.
+
+A working React frontend consuming this API lives in [`../jobtracker-frontend/`](../jobtracker-frontend/) — auth, a filterable applications list with inline status editing, an add-application form, and a dashboard with a per-status breakdown chart. Contact/event management from the UI is still in progress.
