@@ -89,8 +89,7 @@ function AddApplication() {
                 </div>
                 <div>
                     <label className="block text-sm text-gray-600 mb-1">Notes (optional)</label>
-                    <input
-                        type="text"
+                    <textarea
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         className="w-full border rounded px-3 py-2"
