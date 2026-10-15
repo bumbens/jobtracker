@@ -50,6 +50,13 @@ function Applications() {
         ? applications.filter((app) => app.status === statusFilter)
         : applications;
 
+
+    const STATUS_ORDER = ['APPLIED', 'SCREENING', 'INTERVIEW', 'OFFER', 'WITHDRAWN', 'REJECTED']
+
+    const sortedApplications = [...filteredApplications].sort(
+        (a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status)
+    );
+
     if (loading) return <Spinner />;
     if (error) return <p className="p-8">Error: {error}</p>;
 
@@ -83,7 +90,7 @@ function Applications() {
                     <p className="text-gray-600">No applications match the selected filter.</p>
                 ) : (
                     <ul className="space-y-3">
-                        {filteredApplications.map((app) => (
+                        {sortedApplications.map((app) => (
                             <li key={app.id} className="bg-white p-4 rounded shadow-sm hover:shadow-md transition flex flex-col items-start gap-3 sm:flex-row sm:justify-between sm:items-center">
                                 <div>
                                     <div className="flex flex-wrap items-center gap-2">
