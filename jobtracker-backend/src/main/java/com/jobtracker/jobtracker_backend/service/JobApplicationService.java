@@ -1,17 +1,21 @@
 package com.jobtracker.jobtracker_backend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jobtracker.jobtracker_backend.dto.CreateEventRequest;
 import com.jobtracker.jobtracker_backend.dto.CreateJobApplicationRequest;
 import com.jobtracker.jobtracker_backend.dto.JobApplicationResponse;
 import com.jobtracker.jobtracker_backend.dto.UpdateJobApplicationRequest;
 import com.jobtracker.jobtracker_backend.exception.ResourceNotFoundException;
+import com.jobtracker.jobtracker_backend.model.ApplicationEvent;
 import com.jobtracker.jobtracker_backend.model.ApplicationStatus;
 import com.jobtracker.jobtracker_backend.model.JobApplication;
+import com.jobtracker.jobtracker_backend.repository.ApplicationEventRepository;
 import com.jobtracker.jobtracker_backend.repository.JobApplicationRepository;
 import com.jobtracker.jobtracker_backend.repository.UserRepository;
 
@@ -25,27 +29,36 @@ import com.jobtracker.jobtracker_backend.repository.UserRepository;
 public class JobApplicationService {
 
     private final JobApplicationRepository jobApplicationRepository;
+    private final ApplicationEventRepository applicationEventRepository;
     private final UserRepository userRepository;
 
-    public JobApplicationService(JobApplicationRepository jobApplicationRepository, UserRepository userRepository) {
+    public JobApplicationService(JobApplicationRepository jobApplicationRepository, UserRepository userRepository, ApplicationEventRepository applicationEventRepository) {
         this.jobApplicationRepository = jobApplicationRepository;
         this.userRepository = userRepository;
+        this.applicationEventRepository = applicationEventRepository;
     }
 
     @Transactional
-    public JobApplicationResponse create(UUID userId, CreateJobApplicationRequest request) {
+    public JobApplicationResponse create(UUID userId, CreateJobApplicationRequest jobApplicationRequest) {
         JobApplication jobApplication = new JobApplication();
         jobApplication.setUser(userRepository.getReferenceById(userId));
-        jobApplication.setCompany(request.company());
-        jobApplication.setPosition(request.position());
-        jobApplication.setJobUrl(request.jobUrl());
-        jobApplication.setSource(request.source());
+        jobApplication.setCompany(jobApplicationRequest.company());
+        jobApplication.setPosition(jobApplicationRequest.position());
+        jobApplication.setJobUrl(jobApplicationRequest.jobUrl());
+        jobApplication.setSource(jobApplicationRequest.source());
         jobApplication.setStatus(ApplicationStatus.APPLIED);
-        jobApplication.setAppliedDate(request.applicationDate());
-        jobApplication.setSalaryRange(request.salaryRange());
-        jobApplication.setNotes(request.notes());
+        jobApplication.setAppliedDate(jobApplicationRequest.applicationDate());
+        jobApplication.setSalaryRange(jobApplicationRequest.salaryRange());
+        jobApplication.setNotes(jobApplicationRequest.notes());
 
         jobApplicationRepository.saveAndFlush(jobApplication);
+
+        ApplicationEvent applicationEvent = new ApplicationEvent();
+        applicationEvent.setApplicationStatus(ApplicationStatus.APPLIED);
+        applicationEvent.setDate(jobApplicationRequest.applicationDate());
+
+        applicationEventRepository.save(applicationEvent);
+        
         return toResponse(jobApplication);
     }
 
@@ -85,6 +98,14 @@ public class JobApplicationService {
         jobApplication.setStatus(status);
 
         jobApplicationRepository.flush();
+
+        ApplicationEvent applicationEvent = new ApplicationEvent();
+        applicationEvent.setJobApplication(jobApplication);
+        applicationEvent.setApplicationStatus(status);
+        applicationEvent.setDate(LocalDate.now());
+        
+        applicationEventRepository.save(applicationEvent);
+
         return toResponse(jobApplication);
     }
 

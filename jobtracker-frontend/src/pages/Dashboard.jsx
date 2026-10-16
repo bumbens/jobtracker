@@ -49,9 +49,12 @@ function Dashboard() {
             });
     }, [])
 
-    const recentApplications = applications.filter(
-        (app) => new Date(app.applicationDate) > lastWeekDate
-    );
+    const recentApplications = applications
+        .filter((app) => new Date(app.createdAt) > lastWeekDate)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+
+
 
     if (statsLoading || applicationsLoading) return <Spinner />;
 
@@ -88,16 +91,21 @@ function Dashboard() {
                     ) : (
                         <ul className="space-y-3">
                             {recentApplications.map((app) => (
-                                <li key={app.id} className="flex flex-wrap border-b last:border-0 pb-2 justify-between">
-                                    <Link to={`/applications/${app.id}`} className="text-blue-500 hover:underline sm:w-56 truncate">
-                                        {app.company} - {app.position}
-                                    </Link>
-                                    <label className={`${getStatusColor(app.status)} rounded shadow-sm min-w-30 text-center`}>
-                                        <p>{getStatusLabel(app.status)}</p>
+                                <li key={app.id} className="flex flex-wrap items-center justify-between gap-2 border-b last:border-0 pb-2">
+                                    <div>
+                                        <Link to={`/applications/${app.id}`} className="text-blue-500 hover:underline">
+                                            {app.company} - {app.position}
+                                        </Link>
+                                        <p className="text-xs text-gray-400">
+                                            Created: {new Date(app.createdAt).toLocaleDateString()} · Applied: {new Date(app.applicationDate).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <label className={`${getStatusColor(app.status)} rounded shadow-sm min-w-30 text-center px-2 py-1 text-sm`}>
+                                        {getStatusLabel(app.status)}
                                     </label>
                                 </li>
                             ))}
-                            
+
                         </ul>
                     )}
 

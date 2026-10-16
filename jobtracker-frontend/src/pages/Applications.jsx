@@ -51,7 +51,7 @@ function Applications() {
         : applications;
 
 
-    const STATUS_ORDER = ['APPLIED', 'SCREENING', 'INTERVIEW', 'OFFER', 'WITHDRAWN', 'REJECTED']
+    const STATUS_ORDER = ['OFFER', 'INTERVIEW', 'SCREENING', 'APPLIED', 'WITHDRAWN', 'REJECTED']
 
     const sortedApplications = [...filteredApplications].sort(
         (a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status)
@@ -109,7 +109,7 @@ function Applications() {
                                         </select>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
-                                        Applied: {app.applicationDate} · Last updated: {new Date(app.updatedAt).toLocaleDateString()}
+                                        Applied: {new Date(app.applicationDate).toLocaleDateString()} · Last updated: {new Date(app.updatedAt).toLocaleDateString()}
                                     </p>
                                 </div>
                                 <button
