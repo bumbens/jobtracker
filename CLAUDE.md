@@ -9,7 +9,7 @@ Full-stack job application tracker: Spring Boot REST API + React SPA.
 
 ## How we work together
 
-- **"Ja koduje, ty prowadzisz."** The user types the code themselves. Claude explains design decisions, hands over code to transcribe (or a checklist when asked for less hand-holding), reviews what gets written, and catches bugs before/after compile. Claude runs infra/tooling directly (docker, maven, npm, file moves, compiling, curl testing) — that's not "coding" in the pedagogical sense the user cares about.
+- The user types the code themselves. Claude explains design decisions, hands over code to transcribe (or a checklist when asked for less hand-holding), reviews what gets written, and catches bugs before/after compile. Claude runs infra/tooling directly (docker, maven, npm, file moves, compiling, curl testing) — that's not "coding" in the pedagogical sense the user cares about.
 - The user is learning backend fundamentals as we go (Spring/JPA/Hibernate concepts explained from first principles each time something new comes up). For frontend, the user knows React/JS only from "vibe coding" — wants detailed, line-by-line explanations of *why*, not just working snippets.
 - Communicate in English
 - When something surprising breaks, explain the actual root cause (don't just patch symptoms) — this project has a history of root-causing real framework/environment quirks rather than guessing.
