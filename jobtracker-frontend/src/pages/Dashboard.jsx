@@ -6,12 +6,8 @@ import Spinner from '../components/Spinner';
 import apiClient from '../api/client';
 import StatusBarChart from '../components/StatusBarChart';
 
-
-// Turns the applications count into a readable sentence (none / singular / plural).
-function getApplicationsMessage(count) {
-    if (count === 0) return "You haven't applied for any position yet"
-    if (count === 1) return "You have applied for 1 position so far"
-    return `You have applied for ${count} positions so far`
+function dayOrDays(numberOfDays) {
+    return numberOfDays === 1 ? 'day' : 'days';
 }
 
 /** Landing page after login: greeting, link to the applications list, and stats from /dashboard/stats. */
@@ -74,16 +70,41 @@ function Dashboard() {
                 </div>
                 <div className="bg-white rounded shadow-sm p-6 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Stats</h2>
-                    {stats ?
+                    {stats ? (
                         <>
-                            <p className="mb-4">{getApplicationsMessage(stats.totalApplications)}</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                                <div className="bg-gray-50 rounded p-4">
+                                    <p className="text-sm text-gray-500">Total applications</p>
+                                    <p className="text-2xl font-semibold mt-1">{stats.totalApplications}</p>
+                                </div>
+                                <div className="bg-gray-50 rounded p-4">
+                                    <p className="text-sm text-gray-500">Response rate</p>
+                                    <p className="text-2xl font-semibold mt-1">{stats.responseRate.toFixed(1)}%</p>
+                                </div>
+                                <div className="bg-gray-50 rounded p-4">
+                                    <p className="text-sm text-gray-500">Avg. time to response</p>
+                                    <p className="text-2xl font-semibold mt-1">
+                                        {stats.averageResponse !== null
+                                            ? `${stats.averageResponse.toFixed(0)} ${dayOrDays(Math.round(stats.averageResponse))}`
+                                            : '—'}
+                                    </p>
+                                </div>
+                            </div>
                             <StatusBarChart countByStatus={stats.countsByStatus} />
                         </>
-                        : 'Fetching data...'}
+                    ) : (
+                        <p className="text-gray-400">Fetching data...</p>
+                    )}
 
                 </div>
                 <div className="bg-white rounded shadow-sm p-6">
+
                     <h2 className="text-xl font-semibold mb-4">Recent Applications</h2>
+                    <Link to="/add-application" className="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4">
+                        Add New Application
+                    </Link>
+
+
                     {applicationError && <p className="text-red-500">{applicationError}</p>}
                     {statsError && <p className="text-red-500">{statsError}</p>}
                     {recentApplications.length === 0 ? (

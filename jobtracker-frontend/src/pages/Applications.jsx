@@ -91,9 +91,10 @@ function Applications() {
                 ) : (
                     <ul className="space-y-3">
                         {sortedApplications.map((app) => (
+                            
                             <li key={app.id} className="bg-white p-4 rounded shadow-sm hover:shadow-md transition flex flex-col items-start gap-3 sm:flex-row sm:justify-between sm:items-center">
                                 <div>
-                                    <div className="flex flex-wrap items-center gap-2">
+                                    <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-2">
                                         <Link to={`/applications/${app.id}`} className="text-blue-500 hover:underline sm:w-56 truncate">
                                             {app.company} - {app.position}
                                         </Link>

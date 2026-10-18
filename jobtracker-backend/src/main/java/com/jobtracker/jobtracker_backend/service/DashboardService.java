@@ -51,7 +51,7 @@ public class DashboardService {
             List<ApplicationEvent> events = applicationEventRepository.findByJobApplicationIdOrderByDateDesc(app.getId());
 
             events.stream()
-                .filter(event -> event.getApplicationStatus() != ApplicationStatus.APPLIED)
+                .filter(event -> event.getApplicationStatus() != ApplicationStatus.APPLIED && event.getApplicationStatus() != ApplicationStatus.SCREENING)
                 .min(Comparator.comparing(ApplicationEvent::getDate))
                 .ifPresent(firstResponse -> {
                     long days = ChronoUnit.DAYS.between(app.getAppliedDate(), firstResponse.getDate());
