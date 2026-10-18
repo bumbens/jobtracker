@@ -68,7 +68,7 @@ function Dashboard() {
                         </button>
                     </div>
                 </div>
-                <div className="bg-white rounded shadow-sm p-6 mb-6">
+                <div className="bg-white rounded shadow-sm p-6 mb-6 animate-fade-in-up">
                     <h2 className="text-xl font-semibold mb-4">Stats</h2>
                     {stats ? (
                         <>
@@ -97,7 +97,7 @@ function Dashboard() {
                     )}
 
                 </div>
-                <div className="bg-white rounded shadow-sm p-6">
+                <div className="bg-white rounded shadow-sm p-6 animate-fade-in-up">
 
                     <h2 className="text-xl font-semibold mb-4">Recent Applications</h2>
                     <Link to="/add-application" className="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4">
@@ -121,9 +121,9 @@ function Dashboard() {
                                             Created: {new Date(app.createdAt).toLocaleDateString()} · Applied: {new Date(app.applicationDate).toLocaleDateString()}
                                         </p>
                                     </div>
-                                    <label className={`${getStatusColor(app.status)} rounded shadow-sm min-w-30 text-center px-2 py-1 text-sm`}>
+                                    <span className={`${getStatusColor(app.status)} rounded shadow-sm min-w-30 text-center px-2 py-1 text-sm`}>
                                         {getStatusLabel(app.status)}
-                                    </label>
+                                    </span>
                                 </li>
                             ))}
 

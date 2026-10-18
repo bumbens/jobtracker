@@ -6,7 +6,7 @@ import apiClient from "../api/client";
 function AddApplication() {
     const [company, setCompany] = useState('');
     const [position, setPosition] = useState('');
-    const [jobUrl, setJobUrl] = useState(''); // <=== missing in add form
+    const [jobUrl, setJobUrl] = useState('');
     const [source, setSource] = useState(''); 
     const [applicationDate, setApplicationDate] = useState('')
     const [salaryRange, setSalaryRange] = useState('');
@@ -46,12 +46,25 @@ function AddApplication() {
     };
 
     return (
-        <div className="min-h-screen p-8 flex flex-col items-center">
+        <div className="min-h-screen p-8 flex flex-col items-center bg-gray-50">
             <div className="w-full max-w-md mb-4">
-                <Link to="/applications" className="text-blue-500 hover:underline block mb-4">&larr; Back to applications</Link>
+                <Link
+                    to="/applications"
+                    className="text-blue-500 hover:underline block mb-4"
+                    onClick={(e) => {
+                        if (company || position || jobUrl || source || applicationDate || salaryRange || notes) {
+                            const shouldLeave = window.confirm("Are you sure? The changes will not be saved.");
+                            if (!shouldLeave) {
+                                e.preventDefault();
+                            }
+                        }
+                    }}
+                >
+                    &larr; Back to applications
+                </Link>
             </div>
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-md space-y-4">
-                <h1 className="text-2xl font-bold mb-2">Add application</h1>
+            <form onSubmit={handleSubmit} className="bg-white p-10 rounded-xl shadow-lg w-full max-w-md space-y-4 animate-fade-in-up">
+                <h1 className="text-2xl font-bold mb-2 text-gray-800">Add application</h1>
                 {error && <p className="text-red-500">{error}</p>}
 
                 <div>
@@ -60,7 +73,7 @@ function AddApplication() {
                         type="text"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     />    
                     
@@ -71,7 +84,7 @@ function AddApplication() {
                         type="text"
                         value={position}
                         onChange={(e) => setPosition(e.target.value)}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                         list="position-suggestions"
                         required
                     />
@@ -87,7 +100,7 @@ function AddApplication() {
                         type="date"
                         value={applicationDate}
                         onChange={(e) => setApplicationDate(e.target.value)}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     />
                 </div>
@@ -97,7 +110,7 @@ function AddApplication() {
                         type="text"
                         value={source}
                         onChange={(e) => setSource(e.target.value)}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
                 <div>
@@ -106,7 +119,7 @@ function AddApplication() {
                         type="url"
                         value={jobUrl}
                         onChange={(e) => setJobUrl(e.target.value)}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
                 <div>
@@ -115,7 +128,7 @@ function AddApplication() {
                         type="text"
                         value={salaryRange}
                         onChange={(e) => setSalaryRange(e.target.value)}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
                 <div>
@@ -123,10 +136,13 @@ function AddApplication() {
                     <textarea
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+                <button
+                    type="submit"
+                    className="w-full bg-blue-500 text-white p-2 rounded-lg shadow-sm transition-colors duration-200 hover:bg-blue-600"
+                >
                     Save
                 </button>
             </form>
