@@ -54,6 +54,7 @@ public class JobApplicationService {
         jobApplicationRepository.saveAndFlush(jobApplication);
 
         ApplicationEvent applicationEvent = new ApplicationEvent();
+        applicationEvent.setJobApplication(jobApplication);
         applicationEvent.setApplicationStatus(ApplicationStatus.APPLIED);
         applicationEvent.setDate(jobApplicationRequest.applicationDate());
 
