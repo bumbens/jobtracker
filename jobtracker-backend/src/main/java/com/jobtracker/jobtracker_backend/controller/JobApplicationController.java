@@ -3,6 +3,10 @@ package com.jobtracker.jobtracker_backend.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,10 +42,11 @@ public class JobApplicationController {
     }
 
     @GetMapping
-    public List<JobApplicationResponse> getAllApplications(
+    public Page<JobApplicationResponse> getAllApplications(
             @AuthenticationPrincipal UUID userId,
-            @RequestParam(required = false) ApplicationStatus status) {
-        return jobApplicationService.getAllApplications(userId, status);
+            @RequestParam(required = false) ApplicationStatus status,
+            @PageableDefault(size = 10, sort = "appliedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return jobApplicationService.getAllApplications(userId, status, pageable);
     }
 
     @PostMapping

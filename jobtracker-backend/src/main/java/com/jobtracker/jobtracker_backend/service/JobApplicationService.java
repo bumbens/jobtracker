@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,14 +69,12 @@ public class JobApplicationService {
         return toResponse(findOwned(userId, applicationId));
     }
 
-    public List<JobApplicationResponse> getAllApplications(UUID userId, ApplicationStatus status) {
-        List<JobApplication> applications = (status != null)
-                ? jobApplicationRepository.findByUserIdAndStatus(userId, status)
-                : jobApplicationRepository.findByUserId(userId);
+    public Page<JobApplicationResponse> getAllApplications(UUID userId, ApplicationStatus status, Pageable pageable) {
+        Page<JobApplication> applications = (status != null)
+                ? jobApplicationRepository.findByUserIdAndStatus(userId, status, pageable)
+                : jobApplicationRepository.findByUserId(userId, pageable);
 
-        return applications.stream()
-                .map(this::toResponse)
-                .toList();
+        return applications.map(this::toResponse);
     }
 
     @Transactional
