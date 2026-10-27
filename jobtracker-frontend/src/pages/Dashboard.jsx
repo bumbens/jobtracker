@@ -35,7 +35,7 @@ function Dashboard() {
             });
         apiClient.get('/applications')
             .then((response) => {
-                setApplications(response.data);
+                setApplications(response.data.content);
             })
             .catch(() => {
                 setApplicationError('Failed to fetch applications');

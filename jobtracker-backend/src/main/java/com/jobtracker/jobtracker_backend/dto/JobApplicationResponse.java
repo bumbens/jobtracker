@@ -12,6 +12,7 @@ public record JobApplicationResponse(
     String company,
     String position,
     String jobUrl,
+    String candidateProfileUrl,
     String source,
     ApplicationStatus status,
     LocalDate applicationDate,

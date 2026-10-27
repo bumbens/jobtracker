@@ -57,6 +57,8 @@ public class JobApplication {
 
     private String jobUrl;
 
+    private String candidateProfileUrl;
+
     private String source;
 
     @Enumerated(EnumType.STRING)

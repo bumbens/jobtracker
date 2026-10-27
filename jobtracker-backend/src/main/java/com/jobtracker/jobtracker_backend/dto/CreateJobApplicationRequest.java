@@ -10,6 +10,7 @@ public record CreateJobApplicationRequest(
     @NotBlank String company,
     @NotBlank String position,
     String jobUrl,
+    String candidateProfileUrl,
     String source,
     @NotNull LocalDate applicationDate,
     String salaryRange,

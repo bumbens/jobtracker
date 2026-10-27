@@ -82,6 +82,10 @@ function ApplicationDetail() {
                 <div className="bg-white rounded shadow-sm p-6 mb-6">
                     <h1 className="text-2xl font-bold mb-1">{application.company} — {application.position}</h1>
                     <p className="text-gray-600">Status: {application.status}</p>
+                    
+                    {application.candidateProfileUrl && (
+                        <a href={application.candidateProfileUrl} target="_blank" rel="noopener noreferrer">Candidate Profile</a>
+                )}
                 </div>
 
                 <div className="bg-white rounded shadow-sm p-6 mb-6">

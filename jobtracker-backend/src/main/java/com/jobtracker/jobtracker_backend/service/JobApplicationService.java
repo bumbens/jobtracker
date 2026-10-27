@@ -47,6 +47,7 @@ public class JobApplicationService {
         jobApplication.setCompany(jobApplicationRequest.company());
         jobApplication.setPosition(jobApplicationRequest.position());
         jobApplication.setJobUrl(jobApplicationRequest.jobUrl());
+        jobApplication.setCandidateProfileUrl(jobApplicationRequest.candidateProfileUrl());
         jobApplication.setSource(jobApplicationRequest.source());
         jobApplication.setStatus(ApplicationStatus.APPLIED);
         jobApplication.setAppliedDate(jobApplicationRequest.applicationDate());
@@ -122,6 +123,7 @@ public class JobApplicationService {
                 jobApplication.getCompany(),
                 jobApplication.getPosition(),
                 jobApplication.getJobUrl(),
+                jobApplication.getCandidateProfileUrl(),
                 jobApplication.getSource(),
                 jobApplication.getStatus(),
                 jobApplication.getAppliedDate(),

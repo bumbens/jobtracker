@@ -7,6 +7,7 @@ function AddApplication() {
     const [company, setCompany] = useState('');
     const [position, setPosition] = useState('');
     const [jobUrl, setJobUrl] = useState('');
+    const [candidateProfileUrl, setCandidateProfileUrl] = useState('');
     const [source, setSource] = useState(''); 
     const [applicationDate, setApplicationDate] = useState('')
     const [salaryRange, setSalaryRange] = useState('');
@@ -34,6 +35,7 @@ function AddApplication() {
                 company,
                 position,
                 jobUrl: jobUrl || null,
+                candidateProfileUrl: candidateProfileUrl || null,
                 source: source || null,
                 applicationDate,
                 salaryRange: salaryRange || null,
@@ -52,7 +54,7 @@ function AddApplication() {
                     to="/applications"
                     className="text-blue-500 hover:underline block mb-4"
                     onClick={(e) => {
-                        if (company || position || jobUrl || source || applicationDate || salaryRange || notes) {
+                        if (company || position || jobUrl || candidateProfileUrl || source || applicationDate || salaryRange || notes) {
                             const shouldLeave = window.confirm("Are you sure? The changes will not be saved.");
                             if (!shouldLeave) {
                                 e.preventDefault();
@@ -119,6 +121,15 @@ function AddApplication() {
                         type="url"
                         value={jobUrl}
                         onChange={(e) => setJobUrl(e.target.value)}
+                        className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm text-gray-600 mb-1">Link to candidate proile (optional)</label>
+                    <input
+                        type="url"
+                        value={candidateProfileUrl}
+                        onChange={(e) => setCandidateProfileUrl(e.target.value)}
                         className="w-full border rounded-lg px-3 py-2 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
