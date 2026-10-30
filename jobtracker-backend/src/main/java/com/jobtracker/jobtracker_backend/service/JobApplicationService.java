@@ -1,7 +1,6 @@
 package com.jobtracker.jobtracker_backend.service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jobtracker.jobtracker_backend.dto.CreateEventRequest;
 import com.jobtracker.jobtracker_backend.dto.CreateJobApplicationRequest;
 import com.jobtracker.jobtracker_backend.dto.JobApplicationResponse;
 import com.jobtracker.jobtracker_backend.dto.UpdateJobApplicationRequest;
@@ -85,6 +83,7 @@ public class JobApplicationService {
         jobApplication.setCompany(request.company());
         jobApplication.setPosition(request.position());
         jobApplication.setJobUrl(request.jobUrl());
+        jobApplication.setCandidateProfileUrl(request.candidateProfileUrl());
         jobApplication.setSource(request.source());
         jobApplication.setAppliedDate(request.applicationDate());
         jobApplication.setSalaryRange(request.salaryRange());

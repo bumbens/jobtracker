@@ -4,7 +4,7 @@ import axios from 'axios';
 // JWT from localStorage to every outgoing request, so callers never have
 // to set the Authorization header themselves.
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
 })
 
 apiClient.interceptors.request.use((config) => {

@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getStatusColor, getStatusLabel } from "../utils/status";
+import { APPLICATION_FIELDS } from "../utils/applicationFields";
 import apiClient from "../api/client";
 import Spinner from "../components/Spinner";
+import Modal from "../components/Modal";
+
+
 
 /** Application detail page: fetches the application plus its contacts and events in parallel. */
 function ApplicationDetail() {
@@ -16,11 +20,15 @@ function ApplicationDetail() {
     const [contactLinkedin, setContactLinkedin] = useState('');
     const [contactEmail, setContactEmail] = useState('');
 
+    const [editForm, setEditForm] = useState({});
+
     const [getApplicationsError, setGetApplicationError] = useState(null);
     const [addContactError, setAddContactError] = useState(null);
     const [deleteContactError, setDeleteContactError] = useState(null);
+    const [updateApplicationError, setUpdateApplicationError] = useState(null);
 
     const [loading, setLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         Promise.all([
@@ -71,6 +79,44 @@ function ApplicationDetail() {
         }
     }
 
+    const handleEditChange = (e) => {
+        setEditForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    }
+
+    const handleOpenEdit = () => {
+        setEditForm({
+            company: application.company,
+            position: application.position,
+            jobUrl: application.jobUrl || '',
+            candidateProfileUrl: application.candidateProfileUrl || '',
+            source: application.source || '',
+            applicationDate: application.applicationDate,
+            salaryRange: application.salaryRange || '',
+            notes: application.notes || '',
+        });
+        setUpdateApplicationError(null);
+        setIsOpen(true);
+    }
+
+    const handleUpdateApplication = async (e) => {
+        e.preventDefault();
+        setUpdateApplicationError(null);
+        try {
+            const response = await apiClient.put(`/applications/${id}`, {
+                ...editForm,
+                jobUrl: editForm.jobUrl || null,
+                candidateProfileUrl: editForm.candidateProfileUrl || null,
+                source: editForm.source || null,
+                salaryRange: editForm.salaryRange || null,
+                notes: editForm.notes || null,
+            });
+            setApplication(response.data);
+            setIsOpen(false);
+        } catch (err) {
+            setUpdateApplicationError('Failed to update application - check fields');
+        }
+    }
+
     if (loading) return <Spinner />;
     if (getApplicationsError) return <p className="p-8 text-red-500">{getApplicationsError}</p>;
 
@@ -79,16 +125,71 @@ function ApplicationDetail() {
             <div className="max-w-2xl mx-auto">
                 <Link to="/applications" className="text-blue-500 hover:underline block mb-4">&larr; Back to applications</Link>
 
-                <div className="bg-white rounded shadow-sm p-6 mb-6">
-                    <h1 className="text-2xl font-bold mb-1">{application.company} — {application.position}</h1>
-                    <p className="text-gray-600">Status: {application.status}</p>
-                    
+                <div className="bg-white rounded shadow-sm p-6 mb-6 animate-fade-in-up">
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                        <h1 className="text-2xl font-bold">{application.company} — {application.position}</h1>
+                        <span className={`${getStatusColor(application.status)} rounded shadow-sm px-3 py-1 text-sm`}>
+                            {getStatusLabel(application.status)}
+                        </span>
+                    </div>
+
                     {application.candidateProfileUrl && (
-                        <a href={application.candidateProfileUrl} target="_blank" rel="noopener noreferrer">Candidate Profile</a>
-                )}
+                        <a
+                            href={application.candidateProfileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline block mb-4"
+                        >
+                            Candidate Profile
+                        </a>
+                    )}
+
+                    <button
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        onClick={handleOpenEdit}>
+                        Edit application details
+                    </button>
+
+                    <Modal isOpen={isOpen}>
+                        <h2 className="text-xl font-bold mb-2">Edit application details</h2>
+                        <form onSubmit={handleUpdateApplication} className="space-y-2 w-full max-w-sm">
+                            {updateApplicationError && <p className="text-red-500 text-sm">{updateApplicationError}</p>}
+                            {APPLICATION_FIELDS.map((field) => (
+                                <div key={field.name}>
+                                    <label className="block text-sm text-gray-600 mb-1">{field.label}</label>
+                                    <input
+                                        type={field.type}
+                                        name={field.name}
+                                        value={editForm[field.name] || ''}
+                                        onChange={handleEditChange}
+                                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required={field.required}
+                                    />
+                                </div>
+                            ))}
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">Notes (optional)</label>
+                                <textarea
+                                    name="notes"
+                                    value={editForm.notes || ''}
+                                    onChange={handleEditChange}
+                                    className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div className="flex gap-2 pt-2">
+                                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                    Save
+                                </button>
+                                <button type="button" onClick={() => setIsOpen(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </Modal>
                 </div>
 
-                <div className="bg-white rounded shadow-sm p-6 mb-6">
+                <div className="bg-white rounded shadow-sm p-6 mb-6 animate-fade-in-up">
                     <h2 className="text-xl font-semibold mb-3">Contacts</h2>
                     {deleteContactError && <p className="text-red-500 text-sm mb-2">{deleteContactError}</p>}
                     {contacts.length === 0 ? (
@@ -119,7 +220,7 @@ function ApplicationDetail() {
                             placeholder="Name"
                             value={contactName}
                             onChange={(e) => setContactName(e.target.value)}
-                            className="w-full border rounded px-3 py-2"
+                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                         <input
@@ -127,21 +228,21 @@ function ApplicationDetail() {
                             placeholder="Role (optional)"
                             value={contactRole}
                             onChange={(e) => setContactRole(e.target.value)}
-                            className="w-full border rounded px-3 py-2"
+                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             type="email"
                             placeholder="Email (optional)"
                             value={contactEmail}
                             onChange={(e) => setContactEmail(e.target.value)}
-                            className="w-full border rounded px-3 py-2"
+                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <input
                             type="url"
                             placeholder="LinkedIn URL (optional)"
                             value={contactLinkedin}
                             onChange={(e) => setContactLinkedin(e.target.value)}
-                            className="w-full border rounded px-3 py-2"
+                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                             Add Contact
@@ -149,7 +250,7 @@ function ApplicationDetail() {
                     </form>
                 </div>
 
-                <div className="bg-white rounded shadow-sm p-6">
+                <div className="bg-white rounded shadow-sm p-6 animate-fade-in-up">
                     <h2 className="text-xl font-semibold mb-3">History</h2>
                     {events.length === 0 ? (
                         <p className="text-gray-500">No events yet.</p>
