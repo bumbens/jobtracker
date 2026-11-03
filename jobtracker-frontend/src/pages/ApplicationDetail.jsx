@@ -19,6 +19,7 @@ function ApplicationDetail() {
     const [contactRole, setContactRole] = useState('');
     const [contactLinkedin, setContactLinkedin] = useState('');
     const [contactEmail, setContactEmail] = useState('');
+    const [contactPhoneNumber, setContactPhoneNumber] = useState('');
 
     const [editForm, setEditForm] = useState({});
 
@@ -28,7 +29,8 @@ function ApplicationDetail() {
     const [updateApplicationError, setUpdateApplicationError] = useState(null);
 
     const [loading, setLoading] = useState(true);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isEditContactOpen, setIsEditContactOpen] = useState(false);
+    const [isAddContactOpen, setIsAddContactOpen] = useState(false);
 
     useEffect(() => {
         Promise.all([
@@ -58,12 +60,16 @@ function ApplicationDetail() {
                 role: contactRole || null,
                 linkedInUrl: contactLinkedin || null,
                 email: contactEmail || null,
+                phoneNumber: contactPhoneNumber || null,
             });
             setContacts((prev) => [...prev, response.data]);
             setContactName('');
             setContactRole('');
-            setContactLinkedin('')
+            setContactLinkedin('');
             setContactEmail('');
+            setContactPhoneNumber('');
+
+            setIsAddContactOpen(false);
         } catch (err) {
             setAddContactError('Failed to add contact');
         }
@@ -95,7 +101,7 @@ function ApplicationDetail() {
             notes: application.notes || '',
         });
         setUpdateApplicationError(null);
-        setIsOpen(true);
+        setIsEditContactOpen(true);
     }
 
     const handleUpdateApplication = async (e) => {
@@ -111,7 +117,7 @@ function ApplicationDetail() {
                 notes: editForm.notes || null,
             });
             setApplication(response.data);
-            setIsOpen(false);
+            setIsEditContactOpen(false);
         } catch (err) {
             setUpdateApplicationError('Failed to update application - check fields');
         }
@@ -144,13 +150,21 @@ function ApplicationDetail() {
                         </a>
                     )}
 
-                    <button
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                        onClick={handleOpenEdit}>
-                        Edit application details
-                    </button>
+                    <div className="flex gap-2 pt-2">
+                        <button
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                            onClick={handleOpenEdit}>
+                            Edit application details
+                        </button>
 
-                    <Modal isOpen={isOpen}>
+                        <button
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                            onClick={() => setIsAddContactOpen(true)}>
+                            Add new contact
+                        </button>
+                    </div>
+
+                    <Modal isOpen={isEditContactOpen}>
                         <h2 className="text-xl font-bold mb-2">Edit application details</h2>
                         <form onSubmit={handleUpdateApplication} className="space-y-2 w-full max-w-sm">
                             {updateApplicationError && <p className="text-red-500 text-sm">{updateApplicationError}</p>}
@@ -181,13 +195,15 @@ function ApplicationDetail() {
                                 <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                                     Save
                                 </button>
-                                <button type="button" onClick={() => setIsOpen(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+                                <button type="button" onClick={() => setIsEditContactOpen(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
                                     Cancel
                                 </button>
                             </div>
                         </form>
                     </Modal>
                 </div>
+
+
 
                 <div className="bg-white rounded shadow-sm p-6 mb-6 animate-fade-in-up">
                     <h2 className="text-xl font-semibold mb-3">Contacts</h2>
@@ -200,7 +216,7 @@ function ApplicationDetail() {
                                 <li key={contact.id} className="border-b last:border-0 pb-2 flex justify-between items-center">
                                     <div>
                                         <p className="font-medium">{contact.name}</p>
-                                        <p className="text-sm text-gray-500">{contact.role} — {contact.email}</p>
+                                        <p className="text-sm text-gray-500">{contact.role} — {contact.email} — {contact.phoneNumber}</p>
                                     </div>
                                     <button
                                         onClick={() => handleDeleteContact(contact.id)}
@@ -212,42 +228,57 @@ function ApplicationDetail() {
                             ))}
                         </ul>
                     )}
-
-                    <form onSubmit={handleAddContact} className="space-y-2 border-t pt-4">
-                        {addContactError && <p className="text-red-500 text-sm">{addContactError}</p>}
-                        <input
-                            type="text"
-                            placeholder="Name"
-                            value={contactName}
-                            onChange={(e) => setContactName(e.target.value)}
-                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                        <input
-                            type="text"
-                            placeholder="Role (optional)"
-                            value={contactRole}
-                            onChange={(e) => setContactRole(e.target.value)}
-                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <input
-                            type="email"
-                            placeholder="Email (optional)"
-                            value={contactEmail}
-                            onChange={(e) => setContactEmail(e.target.value)}
-                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <input
-                            type="url"
-                            placeholder="LinkedIn URL (optional)"
-                            value={contactLinkedin}
-                            onChange={(e) => setContactLinkedin(e.target.value)}
-                            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            Add Contact
-                        </button>
-                    </form>
+                    <Modal isOpen={isAddContactOpen}>
+                        <h2 className="text-xl font-bold mb-2">Add new contact</h2>
+                        <p className="text-sm text-gray-500 mb-4">Fill in the details below to add a new contact for this application.</p>
+                        <form onSubmit={handleAddContact} className="space-y-2 border-t pt-4">
+                            {addContactError && <p className="text-red-500 text-sm">{addContactError}</p>}
+                            <input
+                                type="text"
+                                placeholder="Name"
+                                value={contactName}
+                                onChange={(e) => setContactName(e.target.value)}
+                                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Role (optional)"
+                                value={contactRole}
+                                onChange={(e) => setContactRole(e.target.value)}
+                                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                                <input
+                                    type="email"
+                                    placeholder="Email (optional)"
+                                    value={contactEmail}
+                                    onChange={(e) => setContactEmail(e.target.value)}
+                                    className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <input
+                                    type="tel"
+                                    placeholder="Phone Number (optional)"
+                                    value={contactPhoneNumber}
+                                    onChange={(e) => setContactPhoneNumber(e.target.value)}
+                                    className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            <input
+                                type="url"
+                                placeholder="LinkedIn URL (optional)"
+                                value={contactLinkedin}
+                                onChange={(e) => setContactLinkedin(e.target.value)}
+                                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <div className="flex gap-2 pt-2">
+                                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                    Add Contact
+                                </button>
+                                <button type="button" onClick={() => setIsAddContactOpen(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </Modal>
                 </div>
 
                 <div className="bg-white rounded shadow-sm p-6 animate-fade-in-up">

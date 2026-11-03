@@ -8,5 +8,6 @@ public record ContactResponse(
     String name,
     String role,
     String email,
+    String phoneNumber,
     String linkedInUrl
 ) {}

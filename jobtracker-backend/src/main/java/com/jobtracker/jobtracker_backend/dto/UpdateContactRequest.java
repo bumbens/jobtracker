@@ -7,5 +7,6 @@ public record UpdateContactRequest(
         @NotBlank String name,
         String role,
         String email,
+        String phoneNumber,
         String linkedInUrl) {
 }

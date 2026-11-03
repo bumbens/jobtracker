@@ -56,6 +56,7 @@ public class ContactService {
         contact.setName(request.name());
         contact.setRole(request.role());
         contact.setEmail(request.email());
+        contact.setPhoneNumber(request.phoneNumber());
         contact.setLinkedInUrl(request.linkedInUrl());
 
         contactRepository.save(contact);
@@ -69,6 +70,7 @@ public class ContactService {
         contact.setName(request.name());
         contact.setRole(request.role());
         contact.setEmail(request.email());
+        contact.setPhoneNumber(request.phoneNumber());
         contact.setLinkedInUrl(request.linkedInUrl());
 
         contactRepository.save(contact);
@@ -110,6 +112,7 @@ public class ContactService {
                 contact.getName(),
                 contact.getRole(),
                 contact.getEmail(),
+                contact.getPhoneNumber(),
                 contact.getLinkedInUrl());
     }
 
